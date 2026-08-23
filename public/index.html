@@ -16,129 +16,9 @@
 <body>
 
   <!-- ==========================================================================
-       1. AUTHENTICATION / LOGIN & SIGN UP VIEW
+       MAIN WEB APP SHELL (DEMO MODE - NO LOGIN REQUIRED)
        ========================================================================== -->
-  <div class="login-view-container" id="view-login">
-    <header class="login-header">
-      <div class="login-logo">
-        <i class="fa-brands fa-spotify"></i>
-        <span>Spotify</span>
-      </div>
-    </header>
-
-    <!-- Error Banner Alert -->
-    <div class="auth-error-banner hidden" id="auth-error-banner">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      <span id="auth-error-text">Invalid email or password.</span>
-    </div>
-
-    <!-- LOGIN CARD -->
-    <main class="login-card" id="card-login">
-      <h1 class="login-title">Log in to Spotify</h1>
-
-      <!-- Social Logins -->
-      <div class="social-buttons-container">
-        <button class="social-btn" id="btn-google-login">
-          <svg class="social-icon" viewBox="0 0 48 48" width="20" height="20">
-            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.13-.44-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.28-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          </svg>
-          <span>Continue with Google</span>
-        </button>
-
-        <button class="social-btn">
-          <i class="fa-brands fa-facebook social-icon facebook-color"></i>
-          <span>Continue with Facebook</span>
-        </button>
-
-        <button class="social-btn">
-          <i class="fa-brands fa-apple social-icon"></i>
-          <span>Continue with Apple</span>
-        </button>
-      </div>
-
-      <div class="login-divider">
-        <span>or</span>
-      </div>
-
-      <!-- Login Form -->
-      <form class="login-form" id="login-form">
-        <div class="form-group">
-          <label for="login-email">Email or username</label>
-          <input type="email" id="login-email" placeholder="Email or username" required autocomplete="username">
-        </div>
-
-        <div class="form-group">
-          <label for="login-password">Password</label>
-          <div class="password-input-wrapper">
-            <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
-            <button type="button" class="toggle-password" id="toggle-password-btn">
-              <i class="fa-regular fa-eye"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="form-remember-row">
-          <label class="switch-label">
-            <input type="checkbox" id="remember-me-checkbox" checked>
-            <span class="switch-slider"></span>
-            <span class="switch-text">Remember me</span>
-          </label>
-        </div>
-
-        <button type="submit" class="login-submit-btn" id="btn-login-submit">Log In</button>
-      </form>
-
-      <hr class="card-divider">
-
-      <div class="signup-prompt">
-        <span>Don't have an account?</span>
-        <button class="signup-btn" id="btn-switch-signup">Sign up for Spotify</button>
-      </div>
-    </main>
-
-    <!-- SIGN UP CARD (HIDDEN BY DEFAULT) -->
-    <main class="login-card hidden" id="card-signup">
-      <h1 class="login-title">Sign up for Spotify</h1>
-
-      <form class="login-form" id="signup-form">
-        <div class="form-group">
-          <label for="signup-name">What should we call you?</label>
-          <input type="text" id="signup-name" placeholder="Enter a profile name" required>
-        </div>
-
-        <div class="form-group">
-          <label for="signup-email">What's your email?</label>
-          <input type="email" id="signup-email" placeholder="Enter your email" required autocomplete="email">
-        </div>
-
-        <div class="form-group">
-          <label for="signup-password">Create a password</label>
-          <input type="password" id="signup-password" placeholder="Create a password (min 6 characters)" required autocomplete="new-password">
-        </div>
-
-        <button type="submit" class="login-submit-btn">Sign Up</button>
-      </form>
-
-      <hr class="card-divider">
-
-      <div class="signup-prompt">
-        <span>Have an account?</span>
-        <button class="signup-btn" id="btn-switch-login">Log in to Spotify</button>
-      </div>
-    </main>
-
-    <footer class="login-page-footer">
-      <p>This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.</p>
-    </footer>
-  </div>
-
-  <!-- ==========================================================================
-       2. MAIN WEB APP SHELL (VISIBLE WHEN LOGGED IN)
-       ========================================================================== -->
-  <div class="app-container hidden" id="app-shell">
+  <div class="app-container" id="app-shell">
     
     <!-- LEFT SIDEBAR -->
     <aside class="sidebar">
@@ -231,8 +111,6 @@
               <button class="menu-item" id="menu-profile"><i class="fa-regular fa-user"></i> Profile</button>
               <button class="menu-item" id="menu-upgrade"><i class="fa-solid fa-gem"></i> Upgrade to Premium</button>
               <button class="menu-item" id="menu-settings"><i class="fa-solid fa-gear"></i> Settings</button>
-              <hr class="menu-divider">
-              <button class="menu-item danger" id="menu-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log out</button>
             </div>
           </div>
         </div>

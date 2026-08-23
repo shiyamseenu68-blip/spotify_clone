@@ -1,8 +1,8 @@
 /* ==========================================================================
-   SPOTIFY FULL-STACK FRONTEND ENGINE (STRICT REAL AUTHENTICATION & REST API)
+   SPOTIFY DEMO FRONTEND ENGINE (NO AUTHENTICATION REQUIRED)
    ========================================================================== */
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 // --------------------------------------------------------------------------
 // 1. STATE MANAGEMENT
@@ -21,16 +21,9 @@ class AppState {
     this.isMuted = false;
     this.currentView = 'home';
 
-    // OAuth Token from URL callback
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectToken = urlParams.get('token');
-    if (redirectToken) {
-      localStorage.setItem('spotify_jwt_token', redirectToken);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    this.token = localStorage.getItem('spotify_jwt_token') || null;
-    this.user = JSON.parse(localStorage.getItem('spotify_user') || 'null');
+    // Demo mode - no authentication
+    this.token = null;
+    this.user = { name: 'Demo User', email: 'demo@spotify.com' };
 
     this.likedTrackIds = new Set();
     this.userPlaylists = [];
@@ -41,7 +34,7 @@ class AppState {
   }
 
   getAuthHeader() {
-    return this.token ? { 'Authorization': `Bearer ${this.token}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
+    return { 'Content-Type': 'application/json' };
   }
 
   async loadInitialData() {
@@ -51,38 +44,13 @@ class AppState {
         this.songs = await songsRes.json();
         this.currentQueue = [...this.songs];
       }
-
-      if (this.token) {
-        const meRes = await fetch(`${API_BASE}/auth/me`, { headers: this.getAuthHeader() });
-        if (meRes.ok) {
-          this.user = await meRes.json();
-          localStorage.setItem('spotify_user', JSON.stringify(this.user));
-          await this.loadUserData();
-        } else {
-          this.logout();
-        }
-      }
     } catch (err) {
       console.warn("Backend API connection note:", err);
     }
   }
 
   async loadUserData() {
-    if (!this.token) return;
-    try {
-      const likesRes = await fetch(`${API_BASE}/likes`, { headers: this.getAuthHeader() });
-      if (likesRes.ok) {
-        const likedIds = await likesRes.json();
-        this.likedTrackIds = new Set(likedIds);
-      }
-
-      const plRes = await fetch(`${API_BASE}/playlists`, { headers: this.getAuthHeader() });
-      if (plRes.ok) {
-        this.userPlaylists = await plRes.json();
-      }
-    } catch (err) {
-      console.error("Error loading user data from backend:", err);
-    }
+    // Demo mode - no user data loading
   }
 
   async toggleLike(trackId) {
@@ -91,13 +59,7 @@ class AppState {
     } else {
       this.likedTrackIds.add(trackId);
     }
-
-    if (this.token) {
-      try {
-        await fetch(`${API_BASE}/likes/toggle`, {
-          method: 'POST',
-          headers: this.getAuthHeader(),
-          body: JSON.stringify({ songId: trackId })
+  }
         });
       } catch (err) {
         console.error("API error toggling like:", err);
@@ -123,119 +85,27 @@ class AppState {
     }
   }
 
-  async loginWithCredentials(email, password) {
-    showAuthError(null); // Clear error banner
-    try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-
-      if (res.ok && data.token) {
-        this.token = data.token;
-        this.user = data.user;
-        localStorage.setItem('spotify_jwt_token', data.token);
-        localStorage.setItem('spotify_user', JSON.stringify(data.user));
-        await this.loadUserData();
-        updateAuthUI();
-        renderUserSidebarPlaylists();
-        renderQuickPicks();
-        renderShelves();
-        renderTrackTable(document.getElementById('all-tracks-body'), this.songs);
-      } else {
-        showAuthError(data.error || 'Invalid email or password.');
-      }
-    } catch (err) {
-      showAuthError("Cannot connect to server. Ensure backend is running.");
-    }
-  }
-
-  async registerAccount(name, email, password) {
-    showAuthError(null);
-    try {
-      const res = await fetch(`${API_BASE}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-      });
-      const data = await res.json();
-
-      if (res.ok && data.token) {
-        this.token = data.token;
-        this.user = data.user;
-        localStorage.setItem('spotify_jwt_token', data.token);
-        localStorage.setItem('spotify_user', JSON.stringify(data.user));
-        await this.loadUserData();
-        updateAuthUI();
-        renderUserSidebarPlaylists();
-        renderQuickPicks();
-        renderShelves();
-        renderTrackTable(document.getElementById('all-tracks-body'), this.songs);
-      } else {
-        showAuthError(data.error || 'Could not register account.');
-      }
-    } catch (err) {
-      showAuthError("Server error during sign up.");
-    }
-  }
-
-  loginWithGoogleOAuth() {
-    window.location.href = '/api/auth/google';
-  }
-
-  logout() {
-    this.token = null;
-    this.user = null;
-    localStorage.removeItem('spotify_jwt_token');
-    localStorage.removeItem('spotify_user');
-    if (this.audio) {
-      this.audio.pause();
-      this.isPlaying = false;
-    }
-    updateAuthUI();
-  }
+  // Demo mode - no authentication functions needed
 }
 
 const state = new AppState();
 
-function showAuthError(msg) {
-  const banner = document.getElementById('auth-error-banner');
-  const text = document.getElementById('auth-error-text');
-  if (!banner || !text) return;
-
-  if (msg) {
-    text.textContent = msg;
-    banner.classList.remove('hidden');
-  } else {
-    banner.classList.add('hidden');
-  }
-}
-
 // --------------------------------------------------------------------------
-// 2. AUTHENTICATION UI CONTROLLER
+// 2. UI CONTROLLER (DEMO MODE)
 // --------------------------------------------------------------------------
 
 function updateAuthUI() {
-  const loginView = document.getElementById('view-login');
   const appShell = document.getElementById('app-shell');
   const playerBar = document.getElementById('player-bar-footer');
   const menuUserName = document.getElementById('menu-user-name');
   const playlistOwnerName = document.getElementById('playlist-owner-name');
 
-  if (state.user && state.token) {
-    loginView.classList.add('hidden');
-    appShell.classList.remove('hidden');
-    playerBar.classList.remove('hidden');
+  // Demo mode - always show app
+  appShell.classList.remove('hidden');
+  playerBar.classList.remove('hidden');
 
-    if (menuUserName) menuUserName.textContent = state.user.name || state.user.email;
-    if (playlistOwnerName) playlistOwnerName.textContent = state.user.name || state.user.email;
-  } else {
-    loginView.classList.remove('hidden');
-    appShell.classList.add('hidden');
-    playerBar.classList.add('hidden');
-  }
+  if (menuUserName) menuUserName.textContent = state.user.name;
+  if (playlistOwnerName) playlistOwnerName.textContent = state.user.name;
 }
 
 // --------------------------------------------------------------------------
@@ -751,84 +621,11 @@ function renderQueue() {
 // --------------------------------------------------------------------------
 
 function setupEventListeners() {
-  const loginForm = document.getElementById('login-form');
-  const signupForm = document.getElementById('signup-form');
-  const googleBtn = document.getElementById('btn-google-login');
+  // Demo mode - no login event listeners needed
   
-  const cardLogin = document.getElementById('card-login');
-  const cardSignup = document.getElementById('card-signup');
-  const btnSwitchSignup = document.getElementById('btn-switch-signup');
-  const btnSwitchLogin = document.getElementById('btn-switch-login');
-
-  const togglePassBtn = document.getElementById('toggle-password-btn');
-  const passInput = document.getElementById('login-password');
-
-  // Toggle between Login card and Signup card
-  if (btnSwitchSignup) {
-    btnSwitchSignup.addEventListener('click', () => {
-      showAuthError(null);
-      cardLogin.classList.add('hidden');
-      cardSignup.classList.remove('hidden');
-    });
-  }
-
-  if (btnSwitchLogin) {
-    btnSwitchLogin.addEventListener('click', () => {
-      showAuthError(null);
-      cardSignup.classList.add('hidden');
-      cardLogin.classList.remove('hidden');
-    });
-  }
-
-  if (togglePassBtn && passInput) {
-    togglePassBtn.addEventListener('click', () => {
-      const type = passInput.type === 'password' ? 'text' : 'password';
-      passInput.type = type;
-      togglePassBtn.innerHTML = `<i class="fa-regular fa-eye${type === 'password' ? '' : '-slash'}"></i>`;
-    });
-  }
-
-  // Google OAuth 2.0 Browser Redirect
-  if (googleBtn) {
-    googleBtn.addEventListener('click', () => state.loginWithGoogleOAuth());
-  }
-
-  // Login Form Submission
-  if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value.trim();
-      const pass = passInput.value.trim();
-      if (email && pass) {
-        state.loginWithCredentials(email, pass);
-      }
-    });
-  }
-
-  // Sign Up Form Submission
-  if (signupForm) {
-    signupForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('signup-name').value.trim();
-      const email = document.getElementById('signup-email').value.trim();
-      const pass = document.getElementById('signup-password').value.trim();
-
-      if (!name || !email || !pass) {
-        showAuthError("All fields are required.");
-        return;
-      }
-      if (pass.length < 6) {
-        showAuthError("Password must be at least 6 characters long.");
-        return;
-      }
-      state.registerAccount(name, email, pass);
-    });
-  }
-
   // Profile Menu
   const profileAvatarBtn = document.getElementById('profile-avatar-btn');
   const profileMenu = document.getElementById('profile-menu');
-  const logoutBtn = document.getElementById('menu-logout');
 
   if (profileAvatarBtn && profileMenu) {
     profileAvatarBtn.addEventListener('click', (e) => {
@@ -840,13 +637,6 @@ function setupEventListeners() {
       if (!profileMenu.contains(e.target) && !profileAvatarBtn.contains(e.target)) {
         profileMenu.classList.add('hidden');
       }
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      if (profileMenu) profileMenu.classList.add('hidden');
-      state.logout();
     });
   }
 
