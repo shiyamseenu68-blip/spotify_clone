@@ -38,19 +38,21 @@ class AppState {
   }
 
   async loadInitialData() {
+    // Demo mode - always load demo songs first
+    this.loadDemoSongs();
+    
     try {
       const songsRes = await fetch(`${API_BASE}/songs`);
       if (songsRes.ok) {
-        this.songs = await songsRes.json();
-        this.currentQueue = [...this.songs];
-      } else {
-        // Fallback to demo songs if API fails
-        this.loadDemoSongs();
+        const apiSongs = await songsRes.json();
+        if (apiSongs.length > 0) {
+          this.songs = apiSongs;
+          this.currentQueue = [...this.songs];
+        }
       }
     } catch (err) {
       console.warn("Backend API connection note:", err);
-      // Fallback to demo songs if API fails
-      this.loadDemoSongs();
+      // Demo songs already loaded as fallback
     }
   }
 
@@ -124,6 +126,7 @@ class AppState {
       }
     ];
     this.currentQueue = [...this.songs];
+    // Pre-like some songs for demo
     this.likedTrackIds = new Set([1, 2, 3]);
   }
 
@@ -137,26 +140,20 @@ class AppState {
     } else {
       this.likedTrackIds.add(trackId);
     }
-  }
-        });
-      } catch (err) {
-        console.error("API error toggling like:", err);
-      }
-    }
+    updateLikedCount();
   }
 
   async createPlaylist(name, desc) {
-    if (!this.token) return;
-    try {
-      const res = await fetch(`${API_BASE}/playlists`, {
-        method: 'POST',
-        headers: this.getAuthHeader(),
-        body: JSON.stringify({ name, desc })
-      });
-      if (res.ok) {
-        const newPl = await res.json();
-        this.userPlaylists.push(newPl);
-        renderUserSidebarPlaylists();
+    // Demo mode - create local playlist
+    const newPl = {
+      id: 'pl_' + Date.now(),
+      name,
+      desc,
+      tracks: [1, 2, 3],
+      createdAt: new Date().toISOString()
+    };
+    this.userPlaylists.push(newPl);
+    renderUserSidebarPlaylists();
       }
     } catch (err) {
       console.error("API error creating playlist:", err);
@@ -936,6 +933,9 @@ async function initApp() {
   
   updateLikedCount();
   setupEventListeners();
+
+  console.log("Loaded songs:", state.songs.length);
+  console.log("Liked songs:", state.likedTrackIds.size);
 
   if (state.songs.length > 0) {
     state.currentTrack = state.songs[0];
