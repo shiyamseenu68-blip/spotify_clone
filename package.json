@@ -8,7 +8,7 @@
     "server": "node server/server.js",
     "client": "vite client --port 3000",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "vercel-build": "echo 'No build step required for static files'"
+    "vercel-build": "echo 'Build complete'"
   },
   "dependencies": {
     "express": "^4.19.2",
