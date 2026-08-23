@@ -43,10 +43,88 @@ class AppState {
       if (songsRes.ok) {
         this.songs = await songsRes.json();
         this.currentQueue = [...this.songs];
+      } else {
+        // Fallback to demo songs if API fails
+        this.loadDemoSongs();
       }
     } catch (err) {
       console.warn("Backend API connection note:", err);
+      // Fallback to demo songs if API fails
+      this.loadDemoSongs();
     }
+  }
+
+  loadDemoSongs() {
+    this.songs = [
+      {
+        id: 1,
+        title: "Let Me Down Slowly",
+        artist: "Alec Benjamin",
+        album: "Narrated For You",
+        duration: "2:49",
+        cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475465/Let_Me_Down_Slowly_PagalWorld.com.pe.mp3",
+        genre: "Pop",
+        lyrics: ["This night is cold in the kingdom", "I can feel you fade away"]
+      },
+      {
+        id: 2,
+        title: "Shape Of You",
+        artist: "Ed Sheeran",
+        album: "÷ (Divide)",
+        duration: "3:53",
+        cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475465/Shape-Of-You_PagalWorlld.Com.mp3",
+        genre: "Pop",
+        lyrics: ["The club isn't the best place to find a lover", "I'm in love with the shape of you"]
+      },
+      {
+        id: 3,
+        title: "Someone You Loved",
+        artist: "Lewis Capaldi",
+        album: "Divinely Uninspired to a Hellish Extent",
+        duration: "3:02",
+        cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475462/Someone-You-Loved_PagalWorld.mp3",
+        genre: "Pop / Ballad",
+        lyrics: ["I was getting kinda used to being someone you loved"]
+      },
+      {
+        id: 4,
+        title: "Master The Blaster",
+        artist: "Anirudh Ravichander",
+        album: "Master (Original Soundtrack)",
+        duration: "3:40",
+        cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475461/Master_The_Blaster_320_PagalWorldl.mp3",
+        genre: "Regional / Tamil",
+        lyrics: ["JD is in the house!", "Master the blaster rhythm"]
+      },
+      {
+        id: 5,
+        title: "Perfect",
+        artist: "Ed Sheeran",
+        album: "÷ (Divide)",
+        duration: "4:23",
+        cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475460/Perfect.mp3",
+        genre: "Pop",
+        lyrics: ["I found a love for me", "Darling, just dive right in"]
+      },
+      {
+        id: 6,
+        title: "Faded",
+        artist: "Alan Walker",
+        album: "Different World",
+        duration: "3:32",
+        cover: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475454/FADED.mp3",
+        genre: "EDM",
+        lyrics: ["Where are you now?", "Was it all in my fantasy?"]
+      }
+    ];
+    this.currentQueue = [...this.songs];
+    this.likedTrackIds = new Set([1, 2, 3]);
   }
 
   async loadUserData() {
@@ -766,14 +844,18 @@ function setupEventListeners() {
     searchResults.classList.remove('hidden');
     browseCategories.classList.add('hidden');
 
-    try {
-      const res = await fetch(`${API_BASE}/songs/search?q=${encodeURIComponent(query)}`);
-      const matches = await res.json();
+    // Demo mode local search
+    const q = query.toLowerCase();
+    const matches = state.songs.filter(s =>
+      s.title.toLowerCase().includes(q) ||
+      s.artist.toLowerCase().includes(q) ||
+      s.genre.toLowerCase().includes(q)
+    );
 
-      if (matches.length > 0) {
-        const top = matches[0];
-        topResultCard.innerHTML = `
-          <img src="${top.cover}" class="top-result-img" alt="${top.title}">
+    if (matches.length > 0) {
+      const top = matches[0];
+      topResultCard.innerHTML = `
+        <img src="${top.cover}" class="top-result-img" alt="${top.title}">
           <span class="top-result-title">${top.title}</span>
           <span class="top-result-artist">Song • ${top.artist}</span>
           <button class="big-play-btn" style="position:absolute; bottom:20px; right:20px;"><i class="fa-solid fa-play"></i></button>
@@ -785,9 +867,6 @@ function setupEventListeners() {
         topResultCard.innerHTML = '<p style="padding:20px;">No results found</p>';
         searchTracksList.innerHTML = '';
       }
-    } catch (err) {
-      console.error("Search API error:", err);
-    }
   });
 
   // Drawer & Modals
