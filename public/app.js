@@ -38,22 +38,10 @@ class AppState {
   }
 
   async loadInitialData() {
-    // Demo mode - always load demo songs first
+    // Load all real songs directly (no API needed)
     this.loadDemoSongs();
     
-    try {
-      const songsRes = await fetch(`${API_BASE}/songs`);
-      if (songsRes.ok) {
-        const apiSongs = await songsRes.json();
-        if (apiSongs.length > 0) {
-          this.songs = apiSongs;
-          this.currentQueue = [...this.songs];
-        }
-      }
-    } catch (err) {
-      console.warn("Backend API connection note:", err);
-      // Demo songs already loaded as fallback
-    }
+    console.log("Loaded all real songs:", this.songs.length);
   }
 
   loadDemoSongs() {
@@ -82,6 +70,17 @@ class AppState {
       },
       {
         id: 3,
+        title: "My Life Is In This Town",
+        artist: "Indie Collective",
+        album: "Township Stories",
+        duration: "3:15",
+        cover: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475462/my_life_is_in_this_town.mp3",
+        genre: "Indie",
+        lyrics: ["Cobblestone streets and old streetlights", "Remembering those late summer nights"]
+      },
+      {
+        id: 4,
         title: "Someone You Loved",
         artist: "Lewis Capaldi",
         album: "Divinely Uninspired to a Hellish Extent",
@@ -92,7 +91,7 @@ class AppState {
         lyrics: ["I was getting kinda used to being someone you loved"]
       },
       {
-        id: 4,
+        id: 5,
         title: "Master The Blaster",
         artist: "Anirudh Ravichander",
         album: "Master (Original Soundtrack)",
@@ -103,7 +102,7 @@ class AppState {
         lyrics: ["JD is in the house!", "Master the blaster rhythm"]
       },
       {
-        id: 5,
+        id: 6,
         title: "Perfect",
         artist: "Ed Sheeran",
         album: "÷ (Divide)",
@@ -114,7 +113,128 @@ class AppState {
         lyrics: ["I found a love for me", "Darling, just dive right in"]
       },
       {
-        id: 6,
+        id: 7,
+        title: "Harleys In Hawaii",
+        artist: "Katy Perry",
+        album: "Smile",
+        duration: "3:05",
+        cover: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475459/Harleys_In_Hawaii_320_PagalWorld.mp3",
+        genre: "Pop",
+        lyrics: ["Boy, tell me, can you take my breath away?", "You and me on a Harley in Hawaii"]
+      },
+      {
+        id: 8,
+        title: "Jujubeee",
+        artist: "Anirudh Ravichander",
+        album: "Jailer",
+        duration: "2:47",
+        cover: "https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475459/jujubeee.mp3",
+        genre: "Regional / Tamil",
+        lyrics: ["Jujubeee attitude!", "Superstar Tiger style!"]
+      },
+      {
+        id: 9,
+        title: "Let Me Love You",
+        artist: "DJ Snake ft. Justin Bieber",
+        album: "Encore",
+        duration: "3:25",
+        cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475459/Let_Me_Love_You_PagalWorld.com.pe.mp3",
+        genre: "EDM / Pop",
+        lyrics: ["Don't you give up, nah, nah, nah", "Let me love you, let me love you"]
+      },
+      {
+        id: 10,
+        title: "Until I Found You",
+        artist: "Stephen Sanchez",
+        album: "Easy On My Eyes",
+        duration: "2:57",
+        cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475458/Just_Like_The_Day_That_I_Met_You_PagalWorld.mp3",
+        genre: "Retro Pop",
+        lyrics: ["Georgia, wrap me up in all your, I want you in my arms"]
+      },
+      {
+        id: 11,
+        title: "Ignite",
+        artist: "Alan Walker & K-391",
+        album: "Ignite Single",
+        duration: "3:30",
+        cover: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475458/Ignite_-_Alan_Walker_320-_PagalWorld.mp3",
+        genre: "EDM",
+        lyrics: ["Like a beacon in the night", "Ignite the fire within"]
+      },
+      {
+        id: 12,
+        title: "Infinity",
+        artist: "Jaymes Young",
+        album: "Feel Something",
+        duration: "3:57",
+        cover: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475457/Infinity_320_PaglaSongs.mp3",
+        genre: "Indie Pop",
+        lyrics: ["Baby, this love I have for you is infinity"]
+      },
+      {
+        id: 13,
+        title: "Cradles",
+        artist: "Sub Urban",
+        album: "Thrill Seeker",
+        duration: "3:29",
+        cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475457/Cradles_PagalWorld.com.cm.mp3",
+        genre: "Alternative",
+        lyrics: ["I live inside my own world of make-believe"]
+      },
+      {
+        id: 14,
+        title: "Gata Only (Slowed)",
+        artist: "FloyyMenor & Cris Mj",
+        album: "Slowed Versions",
+        duration: "3:42",
+        cover: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475456/Gata-Only-Slowed.mp3",
+        genre: "Chill & Slowed",
+        lyrics: ["Slowed vibe rhythm", "Night drive beat"]
+      },
+      {
+        id: 15,
+        title: "Peligrosa (Slowed+Reverb)",
+        artist: "FloyyMenor",
+        album: "Night Beats",
+        duration: "3:18",
+        cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475455/Floyymenor-Peligrosa-Slowedreverb.mp3",
+        genre: "Chill & Slowed",
+        lyrics: ["Deep reverb atmosphere"]
+      },
+      {
+        id: 16,
+        title: "Enemy",
+        artist: "Imagine Dragons x JID",
+        album: "Mercury – Act 1",
+        duration: "2:53",
+        cover: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475454/Enemy-_Mr-Jat.in.mp3",
+        genre: "Rock / Pop",
+        lyrics: ["Everybody wants to be my enemy"]
+      },
+      {
+        id: 17,
+        title: "Believer (Tamil Version)",
+        artist: "Imagine Dragons / Cover",
+        album: "World Covers",
+        duration: "3:24",
+        cover: "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475454/beliver_TAMIL_VERSION.mp3",
+        genre: "Regional / Cover",
+        lyrics: ["Tamil acoustic cover version"]
+      },
+      {
+        id: 18,
         title: "Faded",
         artist: "Alan Walker",
         album: "Different World",
@@ -123,11 +243,77 @@ class AppState {
         url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475454/FADED.mp3",
         genre: "EDM",
         lyrics: ["Where are you now?", "Was it all in my fantasy?"]
+      },
+      {
+        id: 19,
+        title: "Believer",
+        artist: "Imagine Dragons",
+        album: "Evolve",
+        duration: "3:24",
+        cover: "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475454/BELIVER_IMAGINE_DRAGON.mp3",
+        genre: "Rock",
+        lyrics: ["Pain! You made me a, you made me a believer, believer!"]
+      },
+      {
+        id: 20,
+        title: "Badass",
+        artist: "Anirudh Ravichander",
+        album: "Leo (Original Soundtrack)",
+        duration: "3:49",
+        cover: "https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475454/Badass_320_PagalWorldl.mp3",
+        genre: "Regional / Tamil",
+        lyrics: ["Badass Maama! Leo Das is back"]
+      },
+      {
+        id: 21,
+        title: "Believers",
+        artist: "Alan Walker & Conor Maynard",
+        album: "Believers Single",
+        duration: "2:40",
+        cover: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475452/Believers.mp4",
+        genre: "EDM / Pop",
+        lyrics: ["We are the believers!"]
+      },
+      {
+        id: 22,
+        title: "Butter",
+        artist: "BTS",
+        album: "Butter Single",
+        duration: "2:44",
+        cover: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475452/Butter.mp4",
+        genre: "K-Pop",
+        lyrics: ["Smooth like butter, like a criminal undercover"]
+      },
+      {
+        id: 23,
+        title: "Baby",
+        artist: "Justin Bieber ft. Ludacris",
+        album: "My World 2.0",
+        duration: "3:34",
+        cover: "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475452/baby.mp3",
+        genre: "Pop",
+        lyrics: ["Baby, baby, baby, oh!"]
+      },
+      {
+        id: 24,
+        title: "Arcade",
+        artist: "Duncan Laurence",
+        album: "Small Town Boy",
+        duration: "3:03",
+        cover: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/bb2v4ewv/video/upload/v1787475451/Arcade_Duncan_Laurence_320_Kbps_-_Copy.mp3",
+        genre: "Pop",
+        lyrics: ["Loving you is a losing game"]
       }
     ];
     this.currentQueue = [...this.songs];
     // Pre-like some songs for demo
-    this.likedTrackIds = new Set([1, 2, 3]);
+    this.likedTrackIds = new Set([1, 2, 3, 5, 8, 11, 18, 19]);
   }
 
   async loadUserData() {
