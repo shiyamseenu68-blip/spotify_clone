@@ -5,10 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
-    "server": "node server/server.js",
-    "client": "vite client --port 3000",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "vercel-build": "echo 'Build complete'"
+    "vercel-build": "echo 'No build required'"
   },
   "dependencies": {
     "express": "^4.19.2",
@@ -16,12 +13,5 @@
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "concurrently": "^8.2.2"
   }
 }
