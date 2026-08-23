@@ -2,7 +2,10 @@
    SPOTIFY DEMO FRONTEND ENGINE (NO AUTHENTICATION REQUIRED)
    ========================================================================== */
 
-const API_BASE = '/api';
+// Use localhost API when running locally, relative path for Vercel
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://localhost:5000/api' 
+  : '/api';
 
 // --------------------------------------------------------------------------
 // 1. STATE MANAGEMENT
@@ -38,10 +41,25 @@ class AppState {
   }
 
   async loadInitialData() {
-    // Load all real songs directly (no API needed)
-    this.loadDemoSongs();
+    // Try to load from API first (for localhost)
+    try {
+      const songsRes = await fetch(`${API_BASE}/songs`);
+      if (songsRes.ok) {
+        const apiSongs = await songsRes.json();
+        if (apiSongs.length > 0) {
+          this.songs = apiSongs;
+          this.currentQueue = [...this.songs];
+          console.log("Loaded songs from API:", this.songs.length);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("API not available, using local songs:", err);
+    }
     
-    console.log("Loaded all real songs:", this.songs.length);
+    // Fallback to local songs
+    this.loadDemoSongs();
+    console.log("Loaded local songs:", this.songs.length);
   }
 
   loadDemoSongs() {

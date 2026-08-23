@@ -5,6 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
+    "dev": "node server/server.js",
     "build": "echo 'No build required'",
     "vercel-build": "echo 'No build required'"
   },
